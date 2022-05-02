@@ -1,10 +1,13 @@
 const express = require("express");
 const cors = require("cors");
 const routes = require("./src/routes");
+const db = require("./src/database");
 
 const app = express();
 
-app.use(express.json()); //para usar a estrutura de JSON
+db.hasConnection();
+
+app.use(express.json());
 app.use(cors());
 app.use(routes);
 

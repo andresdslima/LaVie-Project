@@ -1,22 +1,18 @@
-// const Psicologos = require("../models/Psicologos");
-
-// const Psicologos = require('../models/Psicologos');
+const Psicologos = require("../models/Psicologos");
 
 // conlistaDePsicologos = st bcrypt = require("bcryptjs");
-const listaDePsicologos = require("../models/psicologos.json")
+
+// const listaDePsicologos = require("../models/psicologos.json")
 
 const psicologosController = {
 
     async cadastrarPsicologo(req, res) {
         try {
             // capturar os dados da request numa estrutura
-            const { id, nome, email, senha, apresentacao } = req.body;
+            const { nome, email, senha, apresentacao } = req.body;
             
-            const novoPsicologo = await listaDePsicologos.create({ id, nome, email, senha, apresentacao });
-            // // criar a nova senha criptografada a partir do que o usuario me mandou
-            // const novaSenha = bcrypt.hashSync(senha, 10);
-            // const novoPsicologo = await Psicologos.create({ nome, email, senha: novaSenha, apresentacao });
-
+            const novoPsicologo = await Psicologos.create({ nome, email, senha, apresentacao });
+            
             return res.status(201).json(novoPsicologo);
         }
         catch (error) {
@@ -25,10 +21,10 @@ const psicologosController = {
         }
     },
 
-    //FUNCIONANDO
+    //FUNCIONANDO???
     async listarPsicologos(req, res) {
         try {
-            const lista = await listaDePsicologos //.findAll(); MODIFICAR BD
+            const lista = await Psicologos.findAll()
             res.status(200);
             res.json(lista);
         }
