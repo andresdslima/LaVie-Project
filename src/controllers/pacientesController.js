@@ -3,14 +3,24 @@ const Paciente = require("../models/Pacientes");
 const PacienteController = {
     async listarPacientes(req, res) {
         try {
-            const pacientes = await Paciente.findAll();
+            //localhost:4000/pacientes?pag=20
+            const { page = 1, limit = 20 } = req.query;
+            const offset = parseInt(limit) * (parseInt(page)-1);
+
+            let filter = {
+                limit: parseInt(limit),
+                offset
+            };
+
+            Object.assign(filter);
+            
+            const pacientes = await Paciente.findAll(filter);
             res.status(200);
             return res.json(pacientes);
         }
         catch(error) {
             console.error(error);
-            res.status(404);
-            return res.json([]);
+            return res.status(404);
         }
     },
 
@@ -65,27 +75,32 @@ const PacienteController = {
         }
         catch(error) {
             console.error(error);
-            return res.status(400).json("Não foi possivel atualizar os dados do paciente");
+            res.status(400);
+            return res.json("Não foi possível atualizar os dados do paciente");
         }
     },
 
     async deletarPaciente(req, res) {
         try {
             const { id } = req.params;
-   
-            const pacienteDeletado = Paciente.destroy({
-                where: {
-                    id
-                }
-            });
+            const paciente = await Paciente.findByPk(id);
+
+            if(!paciente) {
+                res.status(404);
+                return res.json("Id não encontrado");
+            } else {
+                await Paciente.destroy({
+                    where: {
+                        id
+                    }
+                });
+                return res.status(204).json("Paciente deletado");
+            }            
             
-            res.status(204);
-            return res.json("Paciente deletado com sucesso");
-        }
-        catch (error) {
+        } 
+        catch(error) {
             console.error(error);
-            res.status(404);
-            return res.json("Id não encontrado");
+            return res.status(500);
         }
     }
 };
