@@ -4,7 +4,7 @@ const { DataTypes } = require('sequelize'); //importar DataTypes do sequelize
 const Psicologos = db.define(
     "Psicologos", 
     {
-        id_psicologos: {
+        id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true,

@@ -6,6 +6,7 @@ const Psicologos = require("../models/Psicologos");
 
 const psicologosController = {
 
+    //FUNCIONANDO
     async cadastrarPsicologo(req, res) {
         try {
             // capturar os dados da request numa estrutura
@@ -21,7 +22,7 @@ const psicologosController = {
         }
     },
 
-    //FUNCIONANDO???
+    //FUNCIONANDO
     async listarPsicologos(req, res) {
         try {
             const lista = await Psicologos.findAll()
@@ -34,6 +35,7 @@ const psicologosController = {
         }
     },
 
+    //FUNCIONANDO
     async buscarPeloId(req, res) {
 
         try {
@@ -49,22 +51,27 @@ const psicologosController = {
         }
     },
 
+    //FUNCIONANDO
     async alterarPerfil(req, res) {
         try {
             const { id } = req.params;
             const { nome } = req.body;
+            const {email} = req.body
             const { senha } = req.body;
             const { apresentacao } = req.body;
 
             await Psicologos.update(
-                // {
-                //     person_name: nome,
-                // },
-                // {
-                //     where: {
-                //         person_id: id
-                //     },
-                // }
+                {
+                    nome: nome,
+                    email:email,
+                    senha: senha,
+                    apresentacao:apresentacao
+                },
+                {
+                    where: {
+                        id: id
+                    },
+                }
             );
 
             const psicologoAtualizado = await Psicologos.findByPk(id);
@@ -78,17 +85,18 @@ const psicologosController = {
 
     },
 
+    //FUNCIONANDO
     async deletarPsicologo(req, res) {
         try {
             const { id } = req.params;
             
-            await listaDePsicologos.destroy({
+            await Psicologos.destroy({
                 where:{
-                    psicologo_id: id
+                    id: id
                 }
             })
 
-            return res.status(200).json("Artigo apagado com sucesso!");
+            return res.status(200).json("Psicologo apagado com sucesso!");
         }
         catch (error) {
             console.error(error);
