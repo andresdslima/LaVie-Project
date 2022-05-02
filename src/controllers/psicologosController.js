@@ -90,13 +90,19 @@ const psicologosController = {
         try {
             const { id } = req.params;
             
-            await Psicologos.destroy({
-                where:{
-                    id: id
-                }
-            })
+            const psicologo = await Psicologos.findByPk(id)
 
-            return res.status(200).json("Psicologo apagado com sucesso!");
+            if (!psicologo) {
+                return res.status(400).json("You need to select an Id.");
+            } else {
+                await Psicologos.destroy({
+                    where:{
+                        id: id
+                    }
+                })
+                return res.status(200).json("Psicologo apagado com sucesso!");
+            }
+
         }
         catch (error) {
             console.error(error);
