@@ -4,7 +4,7 @@ const routes = require("./src/routes");
 
 const app = express();
 
-app.use(express.json());
+app.use(express.json()); //para usar a estrutura de JSON
 app.use(cors());
 app.use(routes);
 
