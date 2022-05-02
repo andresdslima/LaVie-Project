@@ -1,4 +1,4 @@
-const Paciente = require("../models/Paciente");
+const Paciente = require("../models/Pacientes");
 
 const PacienteController = {
     async listarPacientes(req, res) {
@@ -54,7 +54,7 @@ const PacienteController = {
                 },
                 {
                     where: {
-                        id_pacientes: id
+                        id
                     },
                 }
             );
@@ -63,7 +63,7 @@ const PacienteController = {
             res.status(201);
             return res.json(pacienteAtualizado);
         }
-        catch(erro) {
+        catch(error) {
             console.error(error);
             return res.status(400).json("Não foi possivel atualizar os dados do paciente");
         }
@@ -72,7 +72,7 @@ const PacienteController = {
     async deletarPaciente(req, res) {
         try {
             const { id } = req.params;
-            
+   
             const pacienteDeletado = Paciente.destroy({
                 where: {
                     id
@@ -84,7 +84,8 @@ const PacienteController = {
         }
         catch (error) {
             console.error(error);
-            return res.status(404).json("Id não encontrado");
+            res.status(404);
+            return res.json("Id não encontrado");
         }
     }
 };

@@ -1,5 +1,4 @@
 {
-<<<<<<< HEAD
   "name": "lavie-project",
   "version": "1.0.0",
   "description": "La Vie Clinic Project",
@@ -7,38 +6,17 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon server.js"
-=======
-  "dependencies": {
-    "cors": "^2.8.5",
-    "express": "^4.18.1",
-    "mysql2": "^2.3.3",
-    "nodemon": "^2.0.16",
-    "sequelize": "^6.19.0"
-  },
-  "name": "lavie-project",
-  "version": "1.0.0",
-  "main": "server.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon ./src/server.js"
->>>>>>> 36c1e15eb142561facb366ef2075387def5c8e25
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/andresdslima/LaVie-Project.git"
   },
-<<<<<<< HEAD
   "author": "Andre Lima, Barbara Yokoyama, Guilherme Barros, Laura Neves, Manuela Silva",
-=======
-  "keywords": [],
-  "author": "",
->>>>>>> 36c1e15eb142561facb366ef2075387def5c8e25
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/andresdslima/LaVie-Project/issues"
   },
   "homepage": "https://github.com/andresdslima/LaVie-Project#readme",
-<<<<<<< HEAD
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
@@ -50,7 +28,4 @@
     "nodemon": "^2.0.16",
     "sequelize": "^6.19.0"
   }
-=======
-  "description": ""
->>>>>>> 36c1e15eb142561facb366ef2075387def5c8e25
 }
