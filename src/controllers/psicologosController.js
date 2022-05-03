@@ -59,7 +59,7 @@ const psicologosController = {
             const { id } = req.params;
             const { nome, email, senha, apresentacao } = req.body;
 
-            if (!id) return res.status(400).json("Id not found!");
+            if (!id) return res.status(400).json("Id não encontrado!");
 
             await Psicologos.update(
                 {

@@ -1,9 +1,9 @@
-const Paciente = require("../models/Paciente");
+const Pacientes = require("../models/Pacientes");
 
-const PacienteController = {
+const pacientesController = {
     async listarPacientes(req, res) {
         try {
-            const pacientes = await Paciente.findAll();
+            const pacientes = await Pacientes.findAll();
             res.status(200);
             return res.json(pacientes);
         }
@@ -17,7 +17,7 @@ const PacienteController = {
     async mostrarPaciente(req, res) {
         try {
             const { id } = req.params;
-            const pacienteEspecifico = await Paciente.findByPk(id);
+            const pacienteEspecifico = await Pacientes.findByPk(id);
             res.status(200);
             return res.json(pacienteEspecifico);
         }
@@ -30,7 +30,7 @@ const PacienteController = {
     async cadastarPaciente(req, res) {
         try {
             const { nome, email, idade } = req.body;
-            const pacienteNovo = await Paciente.create({ nome, email, idade });
+            const pacienteNovo = await Pacientes.create({ nome, email, idade });
             res.status(201);
             return res.json(pacienteNovo);
         }
@@ -46,7 +46,9 @@ const PacienteController = {
             const { id } = req.params;
             const { nome, email, idade } = req.body;
 
-            await Paciente.update(
+            if (!id) return res.status(400).json("Id não encontrado!");
+
+            await Pacientes.update(
                 {
                     nome,
                     email,
@@ -59,28 +61,32 @@ const PacienteController = {
                 }
             );
 
-            const pacienteAtualizado = await Paciente.findByPk(id);
-            res.status(201);
-            return res.json(pacienteAtualizado);
+            const pacienteAtualizado = await Pacientes.findByPk(id);
+
+            return res.status(200).json(pacienteAtualizado);
         }
         catch (erro) {
             console.error(error);
-            return res.status(400).json("Não foi possivel atualizar os dados do paciente");
+            return res.status(400).json("Não foi possivel atualizar");
         }
     },
 
     async deletarPaciente(req, res) {
         try {
             const { id } = req.params;
+            const pacienteDeletado = await Pacientes.findByPk(id);
 
-            const pacienteDeletado = Paciente.destroy({
+            if (!pacienteDeletado) {
+                return res.status(404).json("Id não encontrado!");
+            }
+
+            await Pacientes.destroy({
                 where: {
                     id
                 }
             });
 
-            res.status(204);
-            return res.json("Paciente deletado com sucesso");
+            return res.status(204).json("Paciente deletado com sucesso");
         }
         catch (error) {
             console.error(error);
@@ -89,4 +95,4 @@ const PacienteController = {
     }
 };
 
-module.exports = PacienteController;
+module.exports = pacientesController;

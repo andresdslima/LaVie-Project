@@ -1,10 +1,10 @@
 const db = require("../database");
 const { DataTypes } = require("sequelize");
 
-const Paciente = db.define(
-    "Paciente",
+const Pacientes = db.define(
+    "Pacientes",
     {
-        id_paciente: {
+        id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true,
@@ -18,10 +18,11 @@ const Paciente = db.define(
         idade: {
             type: DataTypes.DATEONLY,
         },
-    }, {
-    tableName: "pacientes",
-    timestamps: false,
-}
+    },
+    {
+        tableName: "pacientes",
+        timestamps: false,
+    },
 );
 
-module.exports = Paciente;
+module.exports = Pacientes;
