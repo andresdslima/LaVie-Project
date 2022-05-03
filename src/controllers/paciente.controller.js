@@ -7,7 +7,7 @@ const PacienteController = {
             res.status(200);
             return res.json(pacientes);
         }
-        catch(error) {
+        catch (error) {
             console.error(error);
             res.status(404);
             return res.json([]);
@@ -21,7 +21,7 @@ const PacienteController = {
             res.status(200);
             return res.json(pacienteEspecifico);
         }
-        catch(error) {
+        catch (error) {
             console.error(error);
             return res.status(404).json("Id não encontrado");
         }
@@ -54,16 +54,16 @@ const PacienteController = {
                 },
                 {
                     where: {
-                        id_pacientes: id
+                        id
                     },
                 }
             );
-            
+
             const pacienteAtualizado = await Paciente.findByPk(id);
             res.status(201);
             return res.json(pacienteAtualizado);
         }
-        catch(erro) {
+        catch (erro) {
             console.error(error);
             return res.status(400).json("Não foi possivel atualizar os dados do paciente");
         }
@@ -72,13 +72,13 @@ const PacienteController = {
     async deletarPaciente(req, res) {
         try {
             const { id } = req.params;
-            
+
             const pacienteDeletado = Paciente.destroy({
                 where: {
                     id
                 }
             });
-            
+
             res.status(204);
             return res.json("Paciente deletado com sucesso");
         }

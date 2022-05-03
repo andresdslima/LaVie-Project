@@ -7,13 +7,13 @@ const psicologosController = {
         try {
             // capturar os dados da request numa estrutura
             const { nome, email, senha, apresentacao } = req.body;
-            
-            const psicologo = await Psicologos.create({ nome, email, senha, apresentacao })
-            // // criar a nova senha criptografada a partir do que o usuario me mandou
-            // const novaSenha = bcrypt.hashSync(senha, 10);
-            // const novoPsicologo = await Psicologos.create({ nome, email, senha: novaSenha, apresentacao });
 
-            return res.status(201).json(psicologo);
+            // const psicologo = await Psicologos.create({ nome, email, senha, apresentacao });
+            // criar a nova senha criptografada a partir do que o usuario me mandou
+            const novaSenha = bcrypt.hashSync(senha, 10);
+            const novoPsicologo = await Psicologos.create({ nome, email, senha: novaSenha, apresentacao });
+
+            return res.status(201).json(novoPsicologo);
         }
         catch (error) {
             console.error(error);
@@ -37,8 +37,8 @@ const psicologosController = {
 
         try {
             const { id } = req.params;
-            
-            const psicologos = await Psicologos.findByPk(idPsicologos)
+
+            const psicologos = await Psicologos.findByPk(id)
             if (psicologos) {  // psicologos é diferente de UNDEFINED?
                 res.status(200);
                 res.json(psicologos);
@@ -57,19 +57,22 @@ const psicologosController = {
     async alterarPerfil(req, res) {
         try {
             const { id } = req.params;
-            const { nome } = req.body;
-            const { senha } = req.body;
-            const { apresentacao } = req.body;
+            const { nome, email, senha, apresentacao } = req.body;
+
+            if (!id) return res.status(400).json("Id not found!");
 
             await Psicologos.update(
-                // {
-                //     person_name: nome,
-                // },
-                // {
-                //     where: {
-                //         person_id: id
-                //     },
-                // }
+                {
+                    nome,
+                    email,
+                    senha,
+                    apresentacao
+                },
+                {
+                    where: {
+                        id
+                    },
+                }
             );
 
             const psicologoAtualizado = await Psicologos.findByPk(id);
@@ -80,23 +83,30 @@ const psicologosController = {
             console.error(error);
             return res.status(400).json("Não foi possivel atualizar");
         }
-
     },
 
-    deletarPsicologo(req, res) {
+    async deletarPsicologo(req, res) {
         try {
             const { id } = req.params;
-            
-            const psicologo = Psicologos.deleteOne({id})
+            const psicologoById = await Psicologos.findByPk(id);
 
-            return res.status(200).json("Artigo apagado com sucesso!");
+            if (!psicologoById) {
+                return res.status(404).json("Id not found!");
+            }
+
+            await Psicologos.destroy({
+                where: {
+                    id
+                }
+            });
+
+            return res.status(200).json("Apagado com sucesso!");
         }
         catch (error) {
             console.error(error);
-            return res.status(400).json("Não foi possivel apagar");
+            return res.status(500).json("Não foi possivel apagar");
         }
     },
-
 }
 
 module.exports = psicologosController;
