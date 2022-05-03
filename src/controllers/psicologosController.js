@@ -1,19 +1,18 @@
 const Psicologos = require("../models/Psicologos");
-
-// conlistaDePsicologos = st bcrypt = require("bcryptjs");
-
-// const listaDePsicologos = require("../models/psicologos.json")
+const bcrypt = require("bcryptjs");
 
 const psicologosController = {
 
-    //FUNCIONANDO
     async cadastrarPsicologo(req, res) {
         try {
             // capturar os dados da request numa estrutura
             const { nome, email, senha, apresentacao } = req.body;
-            
-            const novoPsicologo = await Psicologos.create({ nome, email, senha, apresentacao });
-            
+
+            // const psicologo = await Psicologos.create({ nome, email, senha, apresentacao });
+            // criar a nova senha criptografada a partir do que o usuario me mandou
+            const novaSenha = bcrypt.hashSync(senha, 10);
+            const novoPsicologo = await Psicologos.create({ nome, email, senha: novaSenha, apresentacao });
+
             return res.status(201).json(novoPsicologo);
         }
         catch (error) {
@@ -22,28 +21,32 @@ const psicologosController = {
         }
     },
 
-    //FUNCIONANDO
     async listarPsicologos(req, res) {
         try {
-            const lista = await Psicologos.findAll()
+            const lista = await Psicologos.findAll();
             res.status(200);
             res.json(lista);
         }
         catch (error) {
             res.status(500);
-            res.send("Erro ao recuperar dados dos psicologos")
+            res.send("Erro ao recuperar dados dos filmes")
         }
     },
 
-    //FUNCIONANDO
     async buscarPeloId(req, res) {
 
         try {
             const { id } = req.params;
-            const psicologo = await Psicologos.findByPk(id)
 
-            res.json(psicologo)
-            
+            const psicologos = await Psicologos.findByPk(id)
+            if (psicologos) {  // psicologos é diferente de UNDEFINED?
+                res.status(200);
+                res.json(psicologos);
+            }
+            else {
+                res.status(404); // not found
+                res.send("Id: " + idPsicologos + " não encontrado");
+            }
         }
         catch (error) {
             res.status(500);
@@ -51,25 +54,23 @@ const psicologosController = {
         }
     },
 
-    //FUNCIONANDO
     async alterarPerfil(req, res) {
         try {
             const { id } = req.params;
-            const { nome } = req.body;
-            const {email} = req.body
-            const { senha } = req.body;
-            const { apresentacao } = req.body;
+            const { nome, email, senha, apresentacao } = req.body;
+
+            if (!id) return res.status(400).json("Id não encontrado!");
 
             await Psicologos.update(
                 {
-                    nome: nome,
-                    email:email,
-                    senha: senha,
-                    apresentacao:apresentacao
+                    nome,
+                    email,
+                    senha,
+                    apresentacao
                 },
                 {
                     where: {
-                        id: id
+                        id
                     },
                 }
             );
@@ -82,34 +83,30 @@ const psicologosController = {
             console.error(error);
             return res.status(400).json("Não foi possivel atualizar");
         }
-
     },
 
-    //FUNCIONANDO
     async deletarPsicologo(req, res) {
         try {
             const { id } = req.params;
-            
-            const psicologo = await Psicologos.findByPk(id)
+            const psicologoById = await Psicologos.findByPk(id);
 
-            if (!psicologo) {
-                return res.status(400).json("You need to select an Id.");
-            } else {
-                await Psicologos.destroy({
-                    where:{
-                        id: id
-                    }
-                })
-                return res.status(200).json("Psicologo apagado com sucesso!");
+            if (!psicologoById) {
+                return res.status(404).json("Id not found!");
             }
 
+            await Psicologos.destroy({
+                where: {
+                    id
+                }
+            });
+
+            return res.status(200).json("Apagado com sucesso!");
         }
         catch (error) {
             console.error(error);
-            return res.status(400).json("Não foi possivel apagar");
+            return res.status(500).json("Não foi possivel apagar");
         }
     },
-
 }
 
 module.exports = psicologosController;
