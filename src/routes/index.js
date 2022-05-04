@@ -24,11 +24,11 @@ routes.delete('/pacientes/:id', pacientesController.deletarPaciente);
 
 routes.get("/atendimentos", atendimentosController.listarAtendimentos);
 routes.get("/atendimentos/:id", atendimentosController.buscarIdAtendimentos);
-routes.post("/atendimentos", auth, atendimentosController.cadastrarAtendimentos); // "psicologo_id": req.user.id; JWT
+routes.post("/atendimentos", auth, atendimentosController.cadastrarAtendimentos);
 
 routes.get("/dashboards/psicologos", dashboardsController.listarPsicologos);
 routes.get("/dashboards/pacientes", dashboardsController.listarPacientes);
 routes.get("/dashboards/atendimentos", dashboardsController.listarAtendimentos);
-routes.get("/dashboards/atendimentos/:id", dashboardsController.listarAtendimentosById); // numero de atendimentos por psicologo
+routes.get("/dashboards/atendimentos/:id", dashboardsController.listarAtendimentosById);
 
 module.exports = routes;

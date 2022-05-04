@@ -3,14 +3,23 @@ const Pacientes = require("../models/Pacientes");
 const pacientesController = {
     async listarPacientes(req, res) {
         try {
-            const pacientes = await Pacientes.findAll();
-            res.status(200);
-            return res.json(pacientes);
+            const { page = 1, limit = 20 } = req.query;
+            const offset = parseInt(limit) * (parseInt(page)-1);
+
+            let filter = {
+                limit: parseInt(limit),
+                offset
+            };
+
+            // Object.assign(filter);
+            
+            const pacientes = await Pacientes.findAll(filter);
+
+            return res.status(200).json(pacientes);
         }
         catch (error) {
             console.error(error);
-            res.status(404);
-            return res.json([]);
+            return res.status(404);
         }
     },
 
@@ -27,7 +36,7 @@ const pacientesController = {
         }
     },
 
-    /* const existsUser = await Usuarios.findOne({ where: { email } });
+    /* // const existsUser = await Usuarios.findOne({ where: { email } });
     const existsUser = await Usuarios.count({ where: { email } });
 
     if (existsUser) {
@@ -98,7 +107,7 @@ const pacientesController = {
         }
         catch (error) {
             console.error(error);
-            return res.status(404).json("Id não encontrado");
+            return res.status(500);
         }
     }
 };

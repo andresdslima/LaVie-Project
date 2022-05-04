@@ -2,14 +2,9 @@ const Psicologos = require("../models/Psicologos");
 const bcrypt = require("bcryptjs");
 
 const psicologosController = {
-
     async cadastrarPsicologo(req, res) {
         try {
-            // capturar os dados da request numa estrutura
             const { nome, email, senha, apresentacao } = req.body;
-
-            // const psicologo = await Psicologos.create({ nome, email, senha, apresentacao });
-            // criar a nova senha criptografada a partir do que o usuario me mandou
             const novaSenha = bcrypt.hashSync(senha, 10);
             const novoPsicologo = await Psicologos.create({ nome, email, senha: novaSenha, apresentacao });
 
@@ -39,12 +34,12 @@ const psicologosController = {
             const { id } = req.params;
 
             const psicologos = await Psicologos.findByPk(id)
-            if (psicologos) {  // psicologos é diferente de UNDEFINED?
+            if (psicologos) {
                 res.status(200);
                 res.json(psicologos);
             }
             else {
-                res.status(404); // not found
+                res.status(404);
                 res.send("Id: " + idPsicologos + " não encontrado");
             }
         }
