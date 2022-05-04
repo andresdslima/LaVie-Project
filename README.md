@@ -1,6 +1,6 @@
 # La Vie Clinic Project
 
-- Deploy: 
+- [Deploy]().
 
 ## Instructions:
 

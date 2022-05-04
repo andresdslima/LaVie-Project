@@ -1,8 +1,8 @@
-const db = require('../database'); //importar db
-const { DataTypes } = require('sequelize'); //importar DataTypes do sequelize
+const db = require('../database');
+const { DataTypes } = require('sequelize');
 
 const Psicologos = db.define(
-    "Psicologos",
+    "Psicologos", 
     {
         id: {
             type: DataTypes.INTEGER,
@@ -20,11 +20,11 @@ const Psicologos = db.define(
         },
         apresentacao: {
             type: DataTypes.STRING(150),
-        },
+        }
     }, {
         tableName: "psicologos",
         timestamps: false,
     }
-);
+)
 
-module.exports = Psicologos;
+module.exports = Psicologos
