@@ -86,7 +86,7 @@ const psicologosController = {
             const psicologoById = await Psicologos.findByPk(id);
 
             if (!psicologoById) {
-                return res.status(404).json("Id não encontrado!");
+                return res.status(404).json("Id not found!");
             }
 
             await Psicologos.destroy({
@@ -95,7 +95,7 @@ const psicologosController = {
                 }
             });
 
-            return res.status(204).json("Apagado com sucesso!");
+            return res.status(200).json("Apagado com sucesso!");
         }
         catch (error) {
             console.error(error);

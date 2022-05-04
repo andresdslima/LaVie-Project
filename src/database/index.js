@@ -1,5 +1,5 @@
 const Sequelize = require("sequelize");
-const SENHA = require("../configs/senhaMySQL");
+const SENHA = require("../configs/secret");
 
 const DB_NAME = "lavie";
 const DB_USER = "root";
