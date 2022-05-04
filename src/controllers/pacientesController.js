@@ -1,16 +1,23 @@
-const Pacientes = require("../models/Pacientes");
+const { Pacientes } = require("../models");
 
 const pacientesController = {
     async listarPacientes(req, res) {
         try {
-            const pacientes = await Pacientes.findAll();
-            res.status(200);
-            return res.json(pacientes);
+            const { page = 1, limit = 20 } = req.query;
+            const offset = parseInt(limit) * (parseInt(page)-1);
+
+            let filter = {
+                limit: parseInt(limit),
+                offset
+            };
+
+            const pacientes = await Pacientes.findAll(filter);
+
+            return res.status(200).json(pacientes);
         }
         catch (error) {
             console.error(error);
-            res.status(404);
-            return res.json([]);
+            return res.status(500).json("Não foi possível listas dados dos pacientes");
         }
     },
 
@@ -18,26 +25,37 @@ const pacientesController = {
         try {
             const { id } = req.params;
             const pacienteEspecifico = await Pacientes.findByPk(id);
-            res.status(200);
-            return res.json(pacienteEspecifico);
+
+            if (!pacienteEspecifico) {
+                return res.status(404).json("Id não encontrado!");
+            }
+            
+            return res.status(200).json(pacienteEspecifico);
         }
         catch (error) {
             console.error(error);
-            return res.status(404).json("Id não encontrado");
+            return res.status(500).json("Não foi possível mostrar dados do paciente");
         }
     },
+
+    /* // const existsUser = await Usuarios.findOne({ where: { email } });
+    const existsUser = await Usuarios.count({ where: { email } });
+
+    if (existsUser) {
+      return res.stauts(400).json("email já existe");
+    } */
+
 
     async cadastarPaciente(req, res) {
         try {
             const { nome, email, idade } = req.body;
             const pacienteNovo = await Pacientes.create({ nome, email, idade });
-            res.status(201);
-            return res.json(pacienteNovo);
+            
+            return res.status(201).json(pacienteNovo);
         }
         catch (error) {
             console.error(error);
-            res.status(400);
-            return res.json("Não foi possivel cadastrar os dados do paciente");
+            return res.status(400).json("Não foi possível cadastrar os dados do paciente");
         }
     },
 
@@ -45,8 +63,15 @@ const pacientesController = {
         try {
             const { id } = req.params;
             const { nome, email, idade } = req.body;
+            const existsUser = await Pacientes.count({
+                where: {
+                    id
+                }
+            });
 
-            if (!id) return res.status(400).json("Id não encontrado!");
+            if (existsUser === 0) {
+                return res.status(400).json("Id não encontrado!");
+            }
 
             await Pacientes.update(
                 {
@@ -65,18 +90,22 @@ const pacientesController = {
 
             return res.status(200).json(pacienteAtualizado);
         }
-        catch (erro) {
+        catch (error) {
             console.error(error);
-            return res.status(400).json("Não foi possivel atualizar");
+            return res.status(500).json("Não foi possível atualizar dados do paciente");
         }
     },
 
     async deletarPaciente(req, res) {
         try {
             const { id } = req.params;
-            const pacienteDeletado = await Pacientes.findByPk(id);
+            const existsUser = await Pacientes.count({
+                where: {
+                    id
+                }
+            });
 
-            if (!pacienteDeletado) {
+            if (existsUser === 0) {
                 return res.status(404).json("Id não encontrado!");
             }
 
@@ -86,11 +115,11 @@ const pacientesController = {
                 }
             });
 
-            return res.status(204).json("Paciente deletado com sucesso");
+            return res.status(204).json("Paciente deletado!");
         }
         catch (error) {
             console.error(error);
-            return res.status(404).json("Id não encontrado");
+            return res.status(500).json("Não foi possível deletar dados do paciente");
         }
     }
 };

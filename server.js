@@ -5,6 +5,7 @@ const db = require("./src/database");
 
 const port = 4000
 const app = express();
+
 db.hasConnection();
 
 db.hasConnection();

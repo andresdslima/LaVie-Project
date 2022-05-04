@@ -1,6 +1,4 @@
-const Atendimentos = require("../models/Atendimentos");
-const Psicologos = require("../models/Psicologos");
-const Pacientes = require("../models/Pacientes");
+const { Atendimentos, Psicologos, Pacientes }  = require("../models");
 
 const atendimentosController = {
   async listarAtendimentos(req, res) {
@@ -10,14 +8,16 @@ const atendimentosController = {
 
       const filter = {
         limit: parseInt(limit),
-        offset,
+        offset
       };
 
       // Object.assign(filter, {
       //   includes: [Psicologos, Pacientes],
       // });
 
-      const listarAtendimentos = await Atendimentos.findAll(filter);
+      const listarAtendimentos = await Atendimentos.findAll({
+        include: [Pacientes, Psicologos],
+      }, filter);
 
       return res.status(200).json(listarAtendimentos);
     }
@@ -30,7 +30,7 @@ const atendimentosController = {
     try {
       const { id } = req.params;
       const buscarId = await Atendimentos.findByPk(id, {
-        includes: [Pacientes, Psicologos],
+        include: [Pacientes, Psicologos],
       });
 
       if (!buscarId) {
@@ -49,14 +49,21 @@ const atendimentosController = {
     try {
       const { paciente_id, psicologo_id, data_atendimento, observacao } = req.body;
 
-      console.log(req.user);
+      const existsPaciente = await Pacientes.count({
+        where: {
+            id: paciente_id
+        }
+      });
+
+      if (existsPaciente === 0) {
+        return res.status(400).json("Id do paciente não encontrado!");
+      }
       
       const novoAtendimento = await Atendimentos.create({
         paciente_id,
-        psicologo_id,
-        // psicologo_id: req.user.id,
+        psicologo_id: req.auth.id,
         data_atendimento,
-        observacao,
+        observacao
       });
 
       return res.status(201).json(novoAtendimento);

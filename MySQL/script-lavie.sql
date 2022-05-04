@@ -6,7 +6,7 @@ create table psicologos(
 	id int not null auto_increment primary key,
     nome varchar(45) not null,
     email varchar(45) not null unique,
-    senha varchar(45) not null,
+    senha varchar(100) not null,
     apresentacao varchar(150) not null
 );
 
