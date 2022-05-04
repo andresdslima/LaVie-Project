@@ -6,7 +6,6 @@ const db = require('./src/database');
 const porta = 4000;
 
 const app = express();
-db.hasConnection();
 
 db.hasConnection();
 
