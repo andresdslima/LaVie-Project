@@ -27,6 +27,14 @@ const pacientesController = {
         }
     },
 
+    /* const existsUser = await Usuarios.findOne({ where: { email } });
+    const existsUser = await Usuarios.count({ where: { email } });
+
+    if (existsUser) {
+      return res.stauts(400).json("email já existe");
+    } */
+
+
     async cadastarPaciente(req, res) {
         try {
             const { nome, email, idade } = req.body;
@@ -67,7 +75,7 @@ const pacientesController = {
         }
         catch (erro) {
             console.error(error);
-            return res.status(400).json("Não foi possivel atualizar");
+            return res.status(500).json("Não foi possivel atualizar");
         }
     },
 
@@ -86,7 +94,7 @@ const pacientesController = {
                 }
             });
 
-            return res.status(204).json("Paciente deletado com sucesso");
+            return res.status(200).json("Paciente deletado com sucesso");
         }
         catch (error) {
             console.error(error);

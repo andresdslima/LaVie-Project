@@ -48,13 +48,10 @@ const atendimentosController = {
   async cadastrarAtendimentos(req, res) {
     try {
       const { paciente_id, psicologo_id, data_atendimento, observacao } = req.body;
-
-      console.log(req.user);
       
       const novoAtendimento = await Atendimentos.create({
         paciente_id,
-        psicologo_id,
-        // psicologo_id: req.user.id,
+        psicologo_id: req.auth.id,
         data_atendimento,
         observacao,
       });
