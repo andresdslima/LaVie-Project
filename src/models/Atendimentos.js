@@ -16,14 +16,14 @@ const Atendimentos = db.define(
         type: DataTypes.INTEGER,
         references:{
           model: Pacientes,
-          key: "id_paciente",
+          key: "id",
         },
       },
       psicologo_id: {
         type: DataTypes.INTEGER,
         references: {
           model: Psicologos,
-          key: "id_psicologo",
+          key: "id",
         },
       },
       data_atendimento: {

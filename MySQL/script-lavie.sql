@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 
+=======
+>>>>>>> fdcd9965e4ea63fd39b18c7e1ec1c2524f688c90
 create database lavie;
 
 use lavie;
