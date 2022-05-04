@@ -1,12 +1,11 @@
 const express = require("express");
 const cors = require("cors");
 const routes = require("./src/routes");
-const db = require("./src/database");
+const handleError = require('./src/middlewares/handleError');
+const db = require('./src/database');
+const porta = 4000;
 
-const port = 4000
 const app = express();
-
-db.hasConnection();
 
 db.hasConnection();
 
@@ -15,4 +14,4 @@ app.use(cors());
 app.use(routes);
 app.use(handleError);
 
-app.listen(port, () => console.log(`Servidor rodando na porta ${port}`))
+app.listen(porta, () => console.log(`Servidor rodando na porta ${porta}`));
