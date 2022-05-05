@@ -6,46 +6,55 @@ const psicologosController = {
         try {
             const { nome, email, senha, apresentacao } = req.body;
             const novaSenha = bcrypt.hashSync(senha, 10);
+
+            if (!nome || !email || !senha || !apresentacao) {
+                return res.status(400).json("Preencha todos os campos corretamente");
+            };
+
             const novoPsicologo = await Psicologos.create({ nome, email, senha: novaSenha, apresentacao });
 
             return res.status(201).json(novoPsicologo);
         }
         catch (error) {
             console.error(error);
-            return res.status(400).json("Nao foi possivel cadastrar");
+            return res.status(500).json("Nao foi possivel cadastrar");
         }
     },
 
     async listarPsicologos(req, res) {
         try {
-            const lista = await Psicologos.findAll();
-            res.status(200);
-            res.json(lista);
+            const { page = 1, limit = 20 } = req.query;
+            const offset = parseInt(limit) * (parseInt(page) - 1);
+
+            let filter = {
+                limit: parseInt(limit),
+                offset
+            };
+
+            const psicologos = await Psicologos.findAll(filter);
+
+            return res.status(200).json(psicologos);
         }
         catch (error) {
-            res.status(500);
-            res.send("Erro ao recuperar dados dos filmes")
-        }
+            console.error(error);
+            return res.status(500).json("Não foi possível listar os dados");
+        };
     },
 
     async buscarPeloId(req, res) {
-
         try {
             const { id } = req.params;
+            const psicologos = await Psicologos.findByPk(id);
 
-            const psicologos = await Psicologos.findByPk(id)
-            if (psicologos) {
-                res.status(200);
-                res.json(psicologos);
-            }
-            else {
-                res.status(404);
-                res.send("Id: " + idPsicologos + " não encontrado");
-            }
+            if (!psicologos) {
+                return res.status(404).json("Id não encontrado");
+            };
+
+            return res.status(200).json(psicologos);
         }
         catch (error) {
-            res.status(500);
-            res.send("Erro ao recuperar ")
+            console.error(error);
+            return res.status(500).json("Erro interno no servidor")
         }
     },
 
@@ -53,8 +62,15 @@ const psicologosController = {
         try {
             const { id } = req.params;
             const { nome, email, senha, apresentacao } = req.body;
+            const existsUser = await Psicologos.count({
+                where: {
+                    email
+                }
+            });
 
-            if (!id) return res.status(400).json("Id não encontrado!");
+            if (existsUser) {
+                return res.stauts(400).json("Email já existe");
+            };
 
             await Psicologos.update(
                 {
@@ -72,18 +88,26 @@ const psicologosController = {
 
             const psicologoAtualizado = await Psicologos.findByPk(id);
 
+            if (!psicologoAtualizado) {
+                return res.status(400).json("Id não encontrado!");
+            };
+
             return res.status(200).json(psicologoAtualizado);
         }
         catch (error) {
             console.error(error);
-            return res.status(400).json("Não foi possivel atualizar");
+            return res.status(500).json("Não foi possivel atualizar");
         }
     },
 
     async deletarPsicologo(req, res) {
         try {
             const { id } = req.params;
-            const psicologoById = await Psicologos.findByPk(id);
+            const psicologoById = await Psicologos.count({
+                where: {
+                    id
+                }
+            });
 
             if (!psicologoById) {
                 return res.status(404).json("Id não encontrado!");
@@ -92,16 +116,16 @@ const psicologosController = {
             await Psicologos.destroy({
                 where: {
                     id
-                }
+                },
             });
 
-            return res.status(204).json("Apagado com sucesso!");
+            return res.status(200).json("Apagado com sucesso!");
         }
         catch (error) {
             console.error(error);
-            return res.status(500).json("Não foi possivel apagar");
-        }
+            return res.status(500).json("Não foi possivel deletar");
+        };
     },
-}
+};
 
 module.exports = psicologosController;

@@ -2,6 +2,4 @@
 
 - [Deploy]().
 
-## Instructions:
-
-- 
+Como fazer deploy de um HTML q nao esta na raiz do projeto ou nao eh um index.html?

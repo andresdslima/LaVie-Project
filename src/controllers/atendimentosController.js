@@ -1,4 +1,4 @@
-const { Atendimentos, Psicologos, Pacientes }  = require("../models");
+const { Atendimentos, Psicologos, Pacientes } = require("../models");
 
 const atendimentosController = {
   async listarAtendimentos(req, res) {
@@ -11,10 +11,6 @@ const atendimentosController = {
         offset
       };
 
-      // Object.assign(filter, {
-      //   include: [Psicologos, Pacientes],
-      // });
-
       const listarAtendimentos = await Atendimentos.findAll({
         include: [Pacientes, Psicologos],
       }, filter);
@@ -22,8 +18,9 @@ const atendimentosController = {
       return res.status(200).json(listarAtendimentos);
     }
     catch (error) {
-      console.error("Erro ao buscar lista de atendimentos")
-    }
+      console.error(error);
+      return res.status(500).json("Não foi possível listar os dados");
+    };
   },
 
   async buscarIdAtendimentos(req, res) {
@@ -41,29 +38,33 @@ const atendimentosController = {
     }
     catch (error) {
       console.error(error);
-      return res.status(404);
-    }
+      return res.status(500).json("Não foi possível listar os dados");
+    };
   },
 
   async cadastrarAtendimentos(req, res) {
     try {
-      const { paciente_id, psicologo_id, data_atendimento, observacao } = req.body;
+      const { paciente_id, data_atendimento, observacao } = req.body;
+
+      if (!paciente_id || !data_atendimento || !observacao) {
+        return res.status(400).json("Preencha todos os campos corretamente");
+      };
 
       const existsPaciente = await Pacientes.count({
         where: {
-            id: paciente_id
-        }
+          id: paciente_id,
+        },
       });
 
-      if (existsPaciente === 0) {
+      if (!existsPaciente) {
         return res.status(400).json("Id do paciente não encontrado!");
-      }
-      
+      };
+
       const novoAtendimento = await Atendimentos.create({
-        paciente_id,
         psicologo_id: req.auth.id,
+        paciente_id,
         data_atendimento,
-        observacao
+        observacao,
       });
 
       return res.status(201).json(novoAtendimento);

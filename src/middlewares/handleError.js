@@ -9,8 +9,6 @@ function handleError(error, req, res, next) {
         return res.status(error.status).json("Acesso negado!");
     };
 
-    // (error instanceof SequelizeUniqueConstraintError)
-
     console.error(error);
     return res.status(500).json(error);
 };

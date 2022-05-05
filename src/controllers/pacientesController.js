@@ -17,8 +17,8 @@ const pacientesController = {
         }
         catch (error) {
             console.error(error);
-            return res.status(500).json("Não foi possível listas dados dos pacientes");
-        }
+            return res.status(500).json("Não foi possível listar os dados");
+        };
     },
 
     async mostrarPaciente(req, res) {
@@ -28,35 +28,32 @@ const pacientesController = {
 
             if (!pacienteEspecifico) {
                 return res.status(404).json("Id não encontrado!");
-            }
+            };
             
             return res.status(200).json(pacienteEspecifico);
         }
         catch (error) {
             console.error(error);
-            return res.status(500).json("Não foi possível mostrar dados do paciente");
+            return res.status(500).json("Erro interno no servidor");
         }
     },
-
-    /* // const existsUser = await Usuarios.findOne({ where: { email } });
-    const existsUser = await Usuarios.count({ where: { email } });
-
-    if (existsUser) {
-      return res.stauts(400).json("email já existe");
-    } */
-
 
     async cadastarPaciente(req, res) {
         try {
             const { nome, email, idade } = req.body;
+            
+            if (!nome || !email || !idade) {
+                return res.status(400).json("Preencha todos os campos corretamente");
+            };
+
             const pacienteNovo = await Pacientes.create({ nome, email, idade });
             
             return res.status(201).json(pacienteNovo);
         }
         catch (error) {
             console.error(error);
-            return res.status(400).json("Não foi possível cadastrar os dados do paciente");
-        }
+            return res.status(500).json("Nao foi possivel cadastrar");
+        };
     },
 
     async atualizarPaciente(req, res) {
@@ -65,13 +62,13 @@ const pacientesController = {
             const { nome, email, idade } = req.body;
             const existsUser = await Pacientes.count({
                 where: {
-                    id
+                    email
                 }
             });
 
-            if (existsUser === 0) {
-                return res.status(400).json("Id não encontrado!");
-            }
+            if (existsUser) {
+                return res.stauts(400).json("Email já existe");
+            };
 
             await Pacientes.update(
                 {
@@ -88,11 +85,15 @@ const pacientesController = {
 
             const pacienteAtualizado = await Pacientes.findByPk(id);
 
+            if (!pacienteAtualizado) {
+                return res.status(400).json("Id não encontrado!");
+            };
+
             return res.status(200).json(pacienteAtualizado);
         }
         catch (error) {
             console.error(error);
-            return res.status(500).json("Não foi possível atualizar dados do paciente");
+            return res.status(500).json("Não foi possivel atualizar");
         }
     },
 
@@ -105,7 +106,7 @@ const pacientesController = {
                 }
             });
 
-            if (existsUser === 0) {
+            if (!existsUser) {
                 return res.status(404).json("Id não encontrado!");
             }
 
@@ -119,8 +120,8 @@ const pacientesController = {
         }
         catch (error) {
             console.error(error);
-            return res.status(500).json("Não foi possível deletar dados do paciente");
-        }
+            return res.status(500).json("Não foi possivel deletar");
+        };
     }
 };
 
