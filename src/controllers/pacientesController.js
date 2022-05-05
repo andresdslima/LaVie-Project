@@ -106,8 +106,18 @@ const pacientesController = {
                 }
             });
             
+            const existsAtendimento = await Atendimentos.count({
+                where: {
+                    paciente_id: id
+                }
+            });
+
             if (existsPaciente == 0) {
                 return res.status(404).json("Id não encontrado!");
+            }
+
+            if (existsAtendimento != 0) {
+                return res.status(405).json("Não é possível deletar paciente com atendimento cadastrado.");
             }
 
             await Pacientes.destroy({
@@ -119,19 +129,7 @@ const pacientesController = {
             return res.status(204).json("Paciente deletado com sucesso!");
         }
         catch (error) {
-            const { id } = req.params;
-            const existsAtendimento = await Atendimentos.count({
-                where: {
-                    paciente_id: id
-                }
-            });
-
             console.error(error);
-            
-            if (existsAtendimento != 0) {
-                return res.status(405).json("Não é possível deletar paciente com atendimento cadastrado.");
-            }
-
             return res.status(500).json("Não foi possivel deletar");
         };
     }
