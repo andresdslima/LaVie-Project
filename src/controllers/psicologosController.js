@@ -108,7 +108,7 @@ const psicologosController = {
                     id
                 }
             });
-            
+
             const existsAtendimento = await Atendimentos.count({
                 where: {
                     psicologo_id: id
@@ -117,11 +117,11 @@ const psicologosController = {
 
             if (psicologoById == 0) {
                 return res.status(404).json("Id não encontrado!");
-            }
+            };
 
             if (existsAtendimento != 0) {
                 return res.status(405).json("Não é possível deletar psicólogo com atendimento cadastrado.");
-            }            
+            };
 
             await Psicologos.destroy({
                 where: {

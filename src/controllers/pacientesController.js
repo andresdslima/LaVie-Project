@@ -4,7 +4,7 @@ const pacientesController = {
     async listarPacientes(req, res) {
         try {
             const { page = 1, limit = 20 } = req.query;
-            const offset = parseInt(limit) * (parseInt(page)-1);
+            const offset = parseInt(limit) * (parseInt(page) - 1);
 
             let filter = {
                 limit: parseInt(limit),
@@ -29,7 +29,7 @@ const pacientesController = {
             if (!pacienteEspecifico) {
                 return res.status(404).json("Id não encontrado!");
             };
-            
+
             return res.status(200).json(pacienteEspecifico);
         }
         catch (error) {
@@ -41,13 +41,13 @@ const pacientesController = {
     async cadastarPaciente(req, res) {
         try {
             const { nome, email, idade } = req.body;
-            
+
             if (!nome || !email || !idade) {
                 return res.status(400).json("Preencha todos os campos corretamente");
             };
 
             const pacienteNovo = await Pacientes.create({ nome, email, idade });
-            
+
             return res.status(201).json(pacienteNovo);
         }
         catch (error) {
@@ -105,7 +105,7 @@ const pacientesController = {
                     id
                 }
             });
-            
+
             const existsAtendimento = await Atendimentos.count({
                 where: {
                     paciente_id: id
@@ -114,11 +114,11 @@ const pacientesController = {
 
             if (existsPaciente == 0) {
                 return res.status(404).json("Id não encontrado!");
-            }
+            };
 
             if (existsAtendimento != 0) {
                 return res.status(405).json("Não é possível deletar paciente com atendimento cadastrado.");
-            }
+            };
 
             await Pacientes.destroy({
                 where: {
