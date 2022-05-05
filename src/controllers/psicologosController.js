@@ -1,4 +1,4 @@
-const { Psicologos } = require("../models");
+const { Psicologos, Atendimentos } = require("../models");
 const bcrypt = require("bcryptjs");
 
 const psicologosController = {
@@ -119,10 +119,22 @@ const psicologosController = {
                 },
             });
 
-            return res.status(200).json("Apagado com sucesso!");
+            return res.status(204).json("Psicólogo apagado com sucesso!");
         }
         catch (error) {
+            const { id } = req.params;
+            const existsAtendimento = await Atendimentos.count({
+                where: {
+                    psicologo_id: id
+                }
+            });
+
             console.error(error);
+            
+            if (existsAtendimento != 0) {
+                return res.status(405).json("Não é possível deletar psicólogo com atendimento cadastrado.");
+            }            
+            
             return res.status(500).json("Não foi possivel deletar");
         };
     },

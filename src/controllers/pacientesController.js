@@ -1,4 +1,4 @@
-const { Pacientes } = require("../models");
+const { Pacientes, Atendimentos } = require("../models");
 
 const pacientesController = {
     async listarPacientes(req, res) {
@@ -100,13 +100,13 @@ const pacientesController = {
     async deletarPaciente(req, res) {
         try {
             const { id } = req.params;
-            const existsUser = await Pacientes.count({
+            const existsPaciente = await Pacientes.count({
                 where: {
                     id
                 }
             });
-
-            if (!existsUser) {
+            
+            if (existsPaciente == 0) {
                 return res.status(404).json("Id não encontrado!");
             }
 
@@ -116,10 +116,22 @@ const pacientesController = {
                 }
             });
 
-            return res.status(204).json("Paciente deletado!");
+            return res.status(204).json("Paciente deletado com sucesso!");
         }
         catch (error) {
+            const { id } = req.params;
+            const existsAtendimento = await Atendimentos.count({
+                where: {
+                    paciente_id: id
+                }
+            });
+
             console.error(error);
+            
+            if (existsAtendimento != 0) {
+                return res.status(405).json("Não é possível deletar paciente com atendimento cadastrado.");
+            }
+
             return res.status(500).json("Não foi possivel deletar");
         };
     }
