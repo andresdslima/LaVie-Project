@@ -5,9 +5,9 @@ const Pacientes = require("../models/Pacientes");
 const dashboardsController = {
   async listarAtendimentos(req, res) {
     try {
-      const lista = await Atendimentos.findAll();
+      const numeroAtendimentos = await Atendimentos.count();
 
-      return res.status(200).json(lista.length);
+      return res.status(200).json(numeroAtendimentos);
     }
     catch (error) {
       console.error(error);
@@ -15,16 +15,14 @@ const dashboardsController = {
     }
   },
 
-  async listarAtendimentosById(req, res) {
+  async mediaAtendimentos(req, res) {
     try {
-      const { id } = req.params;
-      const lista = await Atendimentos.findAll({
-        where: {
-          psicologo_id: id,
-        }
-      });
+      const numeroAtendimentos = await Atendimentos.count();
+      const numeroPsicologos = await Psicologos.count();
+      const media = (numeroAtendimentos / numeroPsicologos).toFixed(2);
+      const numeroMedia = parseFloat(media);
 
-      return res.status(200).json(lista.length);
+      return res.status(200).json(numeroMedia);
     }
     catch (error) {
       console.error(error);
@@ -34,9 +32,9 @@ const dashboardsController = {
 
   async listarPsicologos(req, res) {
     try {
-      const lista = await Psicologos.findAll();
+      const numeroPsicologos = await Psicologos.count();
 
-      return res.status(200).json(lista.length);
+      return res.status(200).json(numeroPsicologos);
     }
     catch (error) {
       console.error(error);
@@ -46,9 +44,9 @@ const dashboardsController = {
 
   async listarPacientes(req, res) {
     try {
-      const lista = await Pacientes.findAll();
+      const numeroPacientes = await Pacientes.count();
 
-      return res.status(200).json(lista.length);
+      return res.status(200).json(numeroPacientes);
     }
     catch (error) {
       console.error(error);

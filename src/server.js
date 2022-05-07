@@ -1,8 +1,8 @@
 const express = require("express");
 const cors = require("cors");
-const routes = require("./src/routes");
-const handleError = require('./src/middlewares/handleError');
-const db = require('./src/database');
+const routes = require("./routes");
+const handleError = require('./middlewares/handleError');
+const db = require('./database');
 const porta = 4000;
 
 const app = express();

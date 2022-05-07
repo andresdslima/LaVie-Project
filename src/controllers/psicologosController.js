@@ -120,7 +120,7 @@ const psicologosController = {
             };
 
             if (existsAtendimento != 0) {
-                return res.status(405).json("Não é possível deletar psicólogo com atendimento cadastrado.");
+                return res.status(405).json("Não é possível deletar psicólogo com atendimentos cadastrados.");
             };
 
             await Psicologos.destroy({

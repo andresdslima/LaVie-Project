@@ -4,5 +4,5 @@ module.exports = validate({
     body: Joi.object({
         email: Joi.string().email().required(),
         senha: Joi.string().min(6).required()
-    })
+    }),
 });
